@@ -11,6 +11,7 @@
 ## 技術スタック
 
 node.js（express）
+MongoDB
 
 ## データベース設計
 
