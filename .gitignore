@@ -1,0 +1,34 @@
+# node_modules は依存パッケージなので git 管理しない
+node_modules/
+
+# ローカルビルド成果物
+.dist/
+.nuxt/
+.output/
+.sourcemaps/
+
+# Vite キャッシュ（Nuxt 3 + Vite の場合）
+.vite/
+
+# 環境変数ファイル
+.env
+.env.*.local
+
+# ロックファイルを統一する場合は他を ignore（yarn/pnpm を使う場合）
+package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# VSCode 設定（任意）
+.vscode/
+
+# macOS 系
+.DS_Store
+
+# npm log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# その他
+coverage/
