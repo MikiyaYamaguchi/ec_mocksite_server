@@ -18,6 +18,21 @@ router.get("/", async (req, res) => {
 	}
 })
 
+//idを元に一つの商品を取得するAPI
+router.get("/:id", async (req, res) => {
+	try {
+		const singleItem = await ItemModel.findById(req.params.id)
+		res.status(200).json({
+			data: singleItem
+		})
+	} catch(err) {
+		res.status(500).json({
+			message: "エラーが発生しました。",
+			error: err.message
+		})
+	}
+})
+
 //商品を追加するAPI
 router.post("/", async (req, res) => {
 	try {
