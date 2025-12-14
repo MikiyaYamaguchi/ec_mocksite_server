@@ -66,7 +66,6 @@ router.get("/tag/:tag", async (req, res) => {
 //商品を追加するAPI
 router.post("/", async (req, res) => {
 	try {
-		console.log("reqの中身：", req.body);
 		const createdItem = await ItemModel.create(req.body)
 		res.status(201).json(createdItem)
 	} catch(err) {
