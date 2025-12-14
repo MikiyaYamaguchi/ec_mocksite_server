@@ -77,4 +77,34 @@ router.post("/", async (req, res) => {
 	}
 })
 
+//商品を更新するAPI
+router.put("/:id", async(req, res) => {
+	try {
+		const updateItem = await ItemModel.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{
+				new: true,
+				runValidators: true
+			}
+		)
+
+		if(!updateItem) {
+			return res.status(404).json({
+				message: "データが見つかりませんでした。"
+			})
+		}
+
+		res.status(200).json({
+			data: updateItem
+		})
+
+	} catch(err) {
+		res.status(500).json({
+			message: "エラーが発生しました。",
+			error: err.message
+		})
+	}
+})
+
 module.exports = router;
