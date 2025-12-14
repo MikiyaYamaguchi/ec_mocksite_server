@@ -33,6 +33,21 @@ router.get("/:id", async (req, res) => {
 	}
 })
 
+//指定したカテゴリーに属する商品を全て取得するAPI
+router.get("/category/:cat", async (req, res) => {
+	try {
+		const catItems = await ItemModel.find({category: req.params.cat})
+		res.status(200).json({
+			data: catItems
+		})
+	} catch(err) {
+		res.status(500).json({
+			message: "エラーが発生しました。",
+			error: err.message
+		})
+	}
+})
+
 //商品を追加するAPI
 router.post("/", async (req, res) => {
 	try {
