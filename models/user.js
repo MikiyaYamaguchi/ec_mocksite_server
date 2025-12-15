@@ -9,11 +9,18 @@ const userSchema = new Schema({
 	},
 	email: {
 		type: String,
-		required: true
+		required: true,
+		unique: true,
+		index: true
 	},
 	password: {
 		type: String,
 		required: false
+	},
+	refreshToken: {
+		type: String,
+		required: false,
+		default: ""
 	},
 	birthday: {
 		type: Date,
@@ -35,7 +42,7 @@ const userSchema = new Schema({
 
 //パスワードを保存前にハッシュ化
 userSchema.pre("save", async function(next) {
-	if(!this.isModified("password")) return next();
+	if(!this.isModified("password")) return;
 
 	try {
 		const hashed = await bcrypt.hash(this.password, 10)
@@ -48,6 +55,7 @@ userSchema.pre("save", async function(next) {
 userSchema.set("toJSON", {
 	transform: (doc, ret) => {
 		delete ret.password;
+		delete ret.refreshToken;
 		return ret;
 	}
 })
