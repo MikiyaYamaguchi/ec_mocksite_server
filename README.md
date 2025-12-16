@@ -69,6 +69,20 @@ URL：/item/soft-delete/:id<br>
 「isDeleted」の値を変更（0 -> 1 に変更）<br>
 アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelfForItem）を導入
 
+#### 絞り込み検索 API
+
+URL： /item/search/<br>
+クエリパラメーターは複数設定想定<br>
+クエリパラメーターで取得したキーと値を元に絞り込みを行う
+
+以下は想定されるパラメーター
+
+- keyword キーワード部分一致検索
+- category カテゴリ一致
+- tag タグ配列
+- sort ソート条件に変換
+- price ※例：1000 円以下、5000 円以下 など上限条件として扱う
+
 ### ユーザー関連の API
 
 #### 全てのユーザーを取得する API
@@ -114,19 +128,3 @@ URL： /user/refresh/<br>
 
 URL：/user/logout/<br>
 ログアウト時に、cookie の情報を削除（refreshToken と userId）
-
-### 検索関連
-
-#### 絞り込み検索 API
-
-URL： /search/<br>
-クエリパラメーターは複数設定想定<br>
-クエリパラメーターで取得したキーと値を元に絞り込みを行う
-
-以下は想定されるパラメーター
-
-- keyword キーワード部分一致検索
-- category カテゴリ一致
-- tag タグ配列
-- sort ソート条件に変換
-- price ※例：1000 円以下、5000 円以下 など上限条件として扱う

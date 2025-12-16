@@ -21,6 +21,81 @@ router.get("/", async (req, res) => {
 	}
 })
 
+//商品絞り込み検索API
+router.get("/search/", async (req, res) => {
+	try {
+		const {
+			keyword,
+			category,
+			tag,
+			sort,
+			price
+		} = req.query
+
+		//キーワード検索
+		const query = {
+			isDeleted: 0,
+			active: 1
+		}
+
+		if(keyword) {
+			query.$or = [
+				{ name: { $regex: keyword, $options: "i" } },
+				{ context: { $regex: keyword, $options: "i" } }
+			]
+		}
+
+		//カテゴリー検索
+		if(category) {
+			query.category = category
+		}
+
+		//タグ検索
+		if(tag) {
+			const tags = Array.isArray(tag) ? tag : tag.split(",")
+			query.tag = { $in: tags }
+		}
+
+		//価格上限検索
+		if(price) {
+			query.price = { $lte: Number(price) }
+		}
+
+		//ソート条件検索
+		const sortCondition = {}
+		switch(sort) {
+			case "price_asc":
+				sortCondition.price = 1;
+				break;
+			case "price_desc":
+				sortCondition.price = -1;
+				break;
+			case "new":
+				sortCondition.release_date = -1;
+				break;
+			case "stock":
+				sortCondition.stock = -1;
+				break;
+			default:
+				sortCondition.release_date = -1;
+		}
+
+		//DB検索
+		const items = await ItemModel.find(query).sort(sortCondition)
+
+		res.status(200).json({
+			count: items.length,
+			data: items
+		})
+
+	} catch(err) {
+		res.status(500).json({
+			message: "エラーが発生しました。",
+			error: err.message
+		})
+	}
+})
+
 //idを元に一つの商品を取得するAPI
 router.get("/:id", async (req, res) => {
 	try {
