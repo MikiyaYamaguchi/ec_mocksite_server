@@ -46,6 +46,11 @@ const itemSchema = new Schema({
 	active: {
 		type: Number,
 		default: 1
+	},
+	createdBy: {
+		type: Schema.Types.ObjectId,
+		ref: "User",
+		required: true
 	}
 })
 

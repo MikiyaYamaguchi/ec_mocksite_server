@@ -3,6 +3,8 @@ const router = express.Router()
 
 const ItemModel = require("../models/item")
 
+const authMiddleware = require("../middlewares/auth")
+
 //全ての商品を取得するAPI
 router.get("/", async (req, res) => {
 	try {
@@ -64,9 +66,12 @@ router.get("/tag/:tag", async (req, res) => {
 })
 
 //商品を追加するAPI
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
 	try {
-		const createdItem = await ItemModel.create(req.body)
+		const createdItem = await ItemModel.create({
+			...req.body,
+			createdBy: req.user.userId
+	})
 		res.status(201).json(createdItem)
 	} catch(err) {
 		res.status(500).json({
