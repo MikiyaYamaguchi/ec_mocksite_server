@@ -17,15 +17,15 @@ MongoDB
 
 ### 商品テーブル（item）
 
-| id              | name   | price | context | img1   | img2   | img3   | stock | category | tag   | release_date | active |
-| --------------- | ------ | ----- | ------- | ------ | ------ | ------ | ----- | -------- | ----- | ------------ | ------ |
-| int （primary） | string | int   | string  | string | string | string | int   | string   | Array | Date         | int    |
+| id              | name   | price | context | img1   | img2   | img3   | stock | category | tag   | release_date | active | isDeleted | createdBy |
+| --------------- | ------ | ----- | ------- | ------ | ------ | ------ | ----- | -------- | ----- | ------------ | ------ | --------- | --------- |
+| int （primary） | string | int   | string  | string | string | string | int   | string   | Array | Date         | int    | int       | ObjectId  |
 
 ### ユーザーテーブル（User）
 
-| id            | name   | email  | password | birthday | sex    | age |
-| ------------- | ------ | ------ | -------- | -------- | ------ | --- |
-| int (primary) | string | string | string   | Date     | string | int |
+| id            | name   | email  | password | refreshToken | birthday | sex    | age |
+| ------------- | ------ | ------ | -------- | ------------ | -------- | ------ | --- |
+| int (primary) | string | string | string   | string       | Date     | string | int |
 
 ## API エンドポイント
 
