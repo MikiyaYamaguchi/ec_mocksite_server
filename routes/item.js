@@ -113,7 +113,7 @@ router.put("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 })
 
 //商品を削除するAPI
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 	try {
 		const deleteItem = await ItemModel.findByIdAndDelete(req.params.id)
 		if(!deleteItem) {
@@ -122,7 +122,7 @@ router.delete("/:id", async(req, res) => {
 			})
 		}
 		res.status(200).json({
-			data: deleteItem
+			message: "データを削除しました。"
 		})
 	} catch(err) {
 		res.status(500).json({
