@@ -132,4 +132,28 @@ router.delete("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 	}
 })
 
+//商品をソフトデリートするAPI
+router.put("/soft-delete/:id",  authMiddleware, authorizeSelfForItem, async (req, res) => {
+	try {
+		const deleteItem = await ItemModel.findById(req.params.id)
+		if(!deleteItem) {
+			return res.status(404).json({
+				message: "データが見つかりませんでした。"
+			})
+		}
+		deleteItem.isDeleted = 1
+		await deleteItem.save()
+
+		res.status(200).json({
+			message: "商品をソフトデリートしました。",
+			data: deleteItem
+		})
+	} catch(err) {
+		res.status(500).json({
+			message: "エラーが発生しました。",
+			error: err.message
+		})
+	}
+})
+
 module.exports = router;

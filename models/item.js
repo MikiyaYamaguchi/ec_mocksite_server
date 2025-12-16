@@ -47,6 +47,10 @@ const itemSchema = new Schema({
 		type: Number,
 		default: 1
 	},
+	isDeleted: {
+		type: Number,
+		default: 0
+	},
 	createdBy: {
 		type: Schema.Types.ObjectId,
 		ref: "User",
