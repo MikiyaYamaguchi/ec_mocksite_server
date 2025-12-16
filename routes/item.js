@@ -4,6 +4,7 @@ const router = express.Router()
 const ItemModel = require("../models/item")
 
 const authMiddleware = require("../middlewares/auth")
+const authorizeSelfForItem = require("../middlewares/authorizeSelfForItem")
 
 //全ての商品を取得するAPI
 router.get("/", async (req, res) => {
@@ -82,7 +83,7 @@ router.post("/", authMiddleware, async (req, res) => {
 })
 
 //商品を更新するAPI
-router.put("/:id", async(req, res) => {
+router.put("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 	try {
 		const updateItem = await ItemModel.findByIdAndUpdate(
 			req.params.id,
