@@ -207,4 +207,43 @@ router.post("/logout", async (req, res) => {
   }
 })
 
+//ユーザー情報を更新するAPI
+router.put("/:id", authMiddleware, authorizeSelf, async(req, res) => {
+  try {
+    const allowedFields = ["name", "birthday", "sex", "age"]
+    const updateData = {}
+
+    for(const key of allowedFields) {
+      if(req.body[key] != undefined) {
+        updateData[key] = req.body[key]
+      }
+    }
+
+    const updateUser = await UserModel.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true
+      }
+    )
+
+    if(!updateUser) {
+      return res.status(404).json({
+        message: "ユーザーが見つかりませんでした。"
+      })
+    }
+
+    res.status(200).json({
+      data: updateUser
+    })
+
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
 module.exports = router;
