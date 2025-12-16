@@ -6,12 +6,30 @@ const jwt = require("jsonwebtoken")
 
 const UserModel = require("../models/user")
 
+const authMiddleware = require("../middlewares/auth")
+const authorizeSelf = require("../middlewares/authorizeSelf")
+
 //全てのユーザーを取得するAPI
-router.get("/", async(req, res) => {
+router.get("/all/", async(req, res) => {
   try {
     const allUsers = await UserModel.find()
     res.status(200).json({
       data: allUsers
+    })
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
+//idを元に一つのユーザーを取得するAPI
+router.get("/single/:id", authMiddleware, authorizeSelf, async(req, res) => {
+  try {
+    const singleUser = await UserModel.findById(req.params.id)
+    res.status(200).json({
+      data: singleUser
     })
   } catch(err) {
     res.status(500).json({

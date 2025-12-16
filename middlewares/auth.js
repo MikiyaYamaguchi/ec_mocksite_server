@@ -1,4 +1,4 @@
-const jwt = require("jwt")
+const jwt = require("jsonwebtoken")
 
 const authMiddleware = (req, res, next) => {
 	//Authorizationヘッダー取得
