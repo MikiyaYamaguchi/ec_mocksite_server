@@ -6,6 +6,8 @@ const ItemModel = require("../models/item")
 const authMiddleware = require("../middlewares/auth")
 const authorizeSelfForItem = require("../middlewares/authorizeSelfForItem")
 
+const { generateVariationsPrices } = require("../utils/variations");
+
 //全ての商品を取得するAPI
 router.get("/", async (req, res) => {
 	try {
@@ -144,7 +146,10 @@ router.get("/tag/:tag", async (req, res) => {
 //商品を追加するAPI
 router.post("/", authMiddleware, async (req, res) => {
 	try {
+		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
+
 		const createdItem = await ItemModel.create({
+			variations_prices: variations_prices,
 			...req.body,
 			createdBy: req.user.userId
 	})
@@ -160,9 +165,11 @@ router.post("/", authMiddleware, async (req, res) => {
 //商品を更新するAPI
 router.put("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 	try {
+		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
+
 		const updateItem = await ItemModel.findByIdAndUpdate(
 			req.params.id,
-			req.body,
+			{variations_prices: variations_prices, ...req.body},
 			{
 				new: true,
 				runValidators: true

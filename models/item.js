@@ -43,6 +43,19 @@ const itemSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	variations: {
+		type: [
+			{ key: String, values: [String] }
+		],
+		required: false,
+		_id: false
+	},
+	variations_prices: {
+		type: [
+			{ value: String, price: Number }
+		],
+		required: false
+	},
 	active: {
 		type: Number,
 		default: 1
