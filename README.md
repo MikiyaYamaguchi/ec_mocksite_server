@@ -49,16 +49,25 @@ URL： /item/:tag
 
 #### 商品を追加する API
 
-URL： /item/create/
-投稿内容はリクエストボディで追加
+URL： /item/create/<br>
+投稿内容はリクエストボディで追加<br>
+アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelfForItem）を導入
 
 #### 商品を更新する API
 
-URL： /item/update/:id
+URL： /item/update/:id<br>
+アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelfForItem）を導入
 
 #### 商品を削除する API
 
-URL： /item/delete/:id
+URL： /item/delete/:id<br>
+アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelfForItem）を導入
+
+#### 商品をソフトデリートする API
+
+URL：/item/soft-delete/:id<br>
+「isDeleted」の値を変更（0 -> 1 に変更）<br>
+アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelfForItem）を導入
 
 ### ユーザー関連の API
 
@@ -68,31 +77,50 @@ URL： /user/
 
 #### id を元に一つのユーザーを取得する API
 
-URL: /user/:id
+URL: /user/:id<br>
+アクセストークン認証ミドルウェア（authMiddleware）と ID 認証ミドルウェア（authorizeSelf）を導入
 
 #### ユーザーを登録する API
 
-URL： /user/create/
-登録内容はリクエストボディで追加
+URL： /user/create/<br>
+登録内容はリクエストボディで追加<br>
+パスワードはハッシュ化する
 
 #### ユーザーを更新する API
 
-URL： /user/update/:id
+URL： /user/update/:id<br>
+更新できる情報を制限 -> ["name", "birthday", "sex", "age"]<br>
+アクセストークン認証ミドルウェア（authMiddleware）とユーザー ID 認証ミドルウェア（authorizeSelf）を導入
 
 #### ユーザーを削除する API
 
-URL： /user/delete/:id
+URL： /user/delete/:id<br>
+アクセストークン認証ミドルウェア（authMiddleware）とユーザー ID 認証ミドルウェア（authorizeSelf）を導入
 
 #### ユーザーがログインする API
 
-URL： /user/login/
+URL： /user/login/<br>
+ログイン時にアクセストークンを発行する。有効期限は 30 分。<br>
+また、リフレッシュトークンも発行する。有効期限は 1 週間。<br>
+リフレッシュトークンはハッシュ化して、データベースに保存。<br>
+cookie にリフレッシュトークン（refreshToken）とユーザー ID（userId）を保存する。
+
+#### Refresh API
+
+URL： /user/refresh/<br>
+リフレッシュトークンを発行して、新しいアクセストークンを発行
+
+#### ログアウト API
+
+URL：/user/logout/<br>
+ログアウト時に、cookie の情報を削除（refreshToken と userId）
 
 ### 検索関連
 
 #### 絞り込み検索 API
 
-URL： /search/
-クエリパラメーターは複数設定想定
+URL： /search/<br>
+クエリパラメーターは複数設定想定<br>
 クエリパラメーターで取得したキーと値を元に絞り込みを行う
 
 以下は想定されるパラメーター
