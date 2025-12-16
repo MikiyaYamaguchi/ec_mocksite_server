@@ -246,4 +246,31 @@ router.put("/:id", authMiddleware, authorizeSelf, async(req, res) => {
   }
 })
 
+//ユーザーを削除するAPI
+router.delete("/:id", authMiddleware, authorizeSelf, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id)
+    if(!user) {
+      return res.status(404).json({
+        message: "ユーザーが見つかりませんでした。"
+      })
+    }
+
+    await user.deleteOne()
+
+    //強制ログアウト
+    res.clearCookie("refreshToken")
+    res.clearCookie("userId")
+
+    res.status(200).json({
+      message: "ユーザーを削除しました。"
+    })
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
 module.exports = router;
