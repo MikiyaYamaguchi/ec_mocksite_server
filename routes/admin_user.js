@@ -88,4 +88,90 @@ router.post("/login/", async (req, res) => {
   }
 })
 
+//Refresh API
+router.post("/refresh", async(req, res) => {
+  try {
+    // Cookie に保存されたリフレッシュトークンとユーザーIDを取得
+    const refreshTokenFromCookie = req.cookies.adminRefreshToken
+    const userId = req.cookies.adminUserId
+
+    if (!refreshTokenFromCookie || !userId) {
+      return res.status(401).json({ message: "リフレッシュトークンがありません" })
+    }
+
+    // DBから該当ユーザーを取得
+    const user = await AdminUserModel.findById(userId)
+    if(!user || !user.adminRefreshToken) {
+      return res.status(401).json({
+        message: "無効なリフレッシュトークンです。"
+      })
+    }
+
+    // ハッシュ化されたリフレッシュトークンと照合
+    const isValid = await bcrypt.compare(refreshTokenFromCookie, user.adminRefreshToken)
+    if (!isValid) {
+      return res.status(401).json({ message: "無効なリフレッシュトークンです" })
+    }
+
+    // 新しい Access Token 発行
+    const payload = {
+      userId: user._id,
+      email: user.email
+    }
+    const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET_ADMIN, { expiresIn: "30m" })
+
+    //新しい Refresh Token を生成・ハッシュ化して、DB更新
+    const newRefreshToken = crypto.randomBytes(64).toString("hex")
+    const hashedNewRefreshToken = await bcrypt.hash(newRefreshToken, 10)
+    user.adminRefreshToken = hashedNewRefreshToken
+    await user.save()
+
+    //cookie更新
+    res.cookie("adminRefreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+    res.cookie("adminUserId", user._id.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+
+    res.status(200).json({ accessToken: newAccessToken })
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
+//ログアウトAPI
+router.post("/logout", async (req, res) => {
+  try {
+    const userId = req.cookies.adminUserId
+
+    if (userId) {
+      await AdminUserModel.updateOne(
+        { _id: userId },
+        { $unset: { adminRefreshToken: "" } }
+      )
+    }
+
+    res.clearCookie("adminRefreshToken")
+    res.clearCookie("adminUserId")
+    res.status(200).json({
+      message: "ログアウトしました。"
+    })
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
 module.exports = router;
