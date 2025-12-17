@@ -128,3 +128,23 @@ URL： /user/refresh/<br>
 
 URL：/user/logout/<br>
 ログアウト時に、cookie の情報を削除（refreshToken と userId）
+
+### 管理画面関連の API
+
+#### ログイン API
+
+URL： /admin_user/login/<br>
+ログイン時にアクセストークンを発行する。有効期限は 30 分。<br>
+また、リフレッシュトークンも発行する。有効期限は 2 週間。<br>
+リフレッシュトークンはハッシュ化して、データベースに保存。<br>
+cookie にリフレッシュトークン（adminRefreshToken）とユーザー ID（adminUserId）を保存する。
+
+#### Refresh API
+
+URL： /admin_user/refresh/<br>
+リフレッシュトークンを発行して、新しいアクセストークンを発行
+
+#### ログアウト API
+
+URL：/admin_user/logout/<br>
+ログアウト時に、cookie の情報を削除（adminRefreshToken と adminUserId）

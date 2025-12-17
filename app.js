@@ -8,6 +8,7 @@ const connectDB = require("./db/pool")
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var itemRouter = require('./routes/item');
+var adminUserRouter = require('./routes/admin_user');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/item', itemRouter);
+app.use('/admin_user', adminUserRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
