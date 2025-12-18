@@ -96,14 +96,14 @@ router.post("/login/", async (req, res) => {
     //HttpOnly Cookie に保存（Refresh Token と userId）
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     //HttpOnly Cookie に保存
     res.cookie("userId", loginUser._id.toString(), {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
@@ -162,13 +162,13 @@ router.post("/refresh", async(req, res) => {
     //cookie更新
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.cookie("userId", user._id.toString(), {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
