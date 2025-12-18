@@ -70,7 +70,7 @@ router.post("/login/", async (req, res) => {
     })
     //HttpOnly Cookie に保存
     res.cookie("AdminUserId", loginUser._id.toString(), {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: "lax",
       path: "/",
@@ -137,7 +137,7 @@ router.post("/refresh", async(req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.cookie("adminUserId", user._id.toString(), {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: "lax",
       path: "/",
