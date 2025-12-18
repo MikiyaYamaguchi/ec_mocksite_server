@@ -17,9 +17,9 @@ MongoDB
 
 ### 商品テーブル（item）
 
-| id              | name   | price | context | img1   | img2   | img3   | stock | category | tag   | release_date | active | isDeleted | createdBy |
-| --------------- | ------ | ----- | ------- | ------ | ------ | ------ | ----- | -------- | ----- | ------------ | ------ | --------- | --------- |
-| int （primary） | string | int   | string  | string | string | string | int   | string   | Array | Date         | int    | int       | ObjectId  |
+| id              | name   | price | context | img1   | img2   | img3   | stock | category | tag   | release_date | active | isDeleted |
+| --------------- | ------ | ----- | ------- | ------ | ------ | ------ | ----- | -------- | ----- | ------------ | ------ | --------- |
+| int （primary） | string | int   | string  | string | string | string | int   | string   | Array | Date         | int    | int       |
 
 ### ユーザーテーブル（User）
 

@@ -8,12 +8,6 @@ const authorizeSelfForItem = async (req, res, next) => {
 		})
 	}
 
-	if(item.createdBy.toString() !==  req.user.userId) {
-		return res.status(403).json({
-			message: "この操作を行う権限がありません。"
-		})
-	}
-
 	next()
 }
 

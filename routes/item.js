@@ -150,8 +150,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
 		const createdItem = await ItemModel.create({
 			variations_prices: variations_prices,
-			...req.body,
-			createdBy: req.user.userId
+			...req.body
 	})
 		res.status(201).json(createdItem)
 	} catch(err) {

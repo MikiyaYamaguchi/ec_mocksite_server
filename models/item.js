@@ -63,11 +63,6 @@ const itemSchema = new Schema({
 	isDeleted: {
 		type: Number,
 		default: 0
-	},
-	createdBy: {
-		type: Schema.Types.ObjectId,
-		ref: "User",
-		required: true
 	}
 })
 
