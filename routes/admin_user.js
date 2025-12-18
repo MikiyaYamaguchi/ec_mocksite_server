@@ -65,6 +65,7 @@ router.post("/login/", async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     //HttpOnly Cookie に保存
@@ -72,6 +73,7 @@ router.post("/login/", async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -131,12 +133,14 @@ router.post("/refresh", async(req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.cookie("adminUserId", user._id.toString(), {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
