@@ -62,7 +62,7 @@ router.post("/login/", async (req, res) => {
 
     //HttpOnly Cookie に保存（Refresh Token と userId）
     res.cookie("adminRefreshToken", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: "lax",
       path: "/",
@@ -130,7 +130,7 @@ router.post("/refresh", async(req, res) => {
 
     //cookie更新
     res.cookie("adminRefreshToken", newRefreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: "lax",
       path: "/",
