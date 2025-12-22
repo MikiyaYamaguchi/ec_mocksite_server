@@ -20,8 +20,23 @@ router.post("/", async (req, res) => {
 	}
 })
 
+//idを元に一つの管理者を取得するAPI
+router.get("/single/:id", async(req, res) => {
+  try {
+    const singleUser = await AdminUserModel.findById(req.params.id)
+    res.status(200).json({
+      data: singleUser
+    })
+  } catch(err) {
+    res.status(500).json({
+      message: "エラーが発生しました。",
+      error: err.message
+    })
+  }
+})
+
 //管理者がログインするAPI
-router.post("/login/", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
     const loginUser = await AdminUserModel.findOne({email})
@@ -165,8 +180,17 @@ router.post("/logout", async (req, res) => {
       )
     }
 
-    res.clearCookie("adminRefreshToken")
-    res.clearCookie("adminUserId")
+    res.clearCookie("adminRefreshToken", {
+      path: "/",
+      sameSite: "lax",
+      secure: false,
+    })
+    res.clearCookie("adminUserId", {
+      path: "/",
+      sameSite: "lax",
+      secure: false,
+    })
+
     res.status(200).json({
       message: "ログアウトしました。"
     })
