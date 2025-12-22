@@ -61,7 +61,7 @@ router.post("/login/", async (req, res) => {
     await loginUser.save()
 
     //HttpOnly Cookie に保存（Refresh Token と userId）
-    res.cookie("AdminRefreshToken", refreshToken, {
+    res.cookie("adminRefreshToken", refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
@@ -69,7 +69,7 @@ router.post("/login/", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     //HttpOnly Cookie に保存
-    res.cookie("AdminUserId", loginUser._id.toString(), {
+    res.cookie("adminUserId", loginUser._id.toString(), {
       httpOnly: false,
       secure: false,
       sameSite: "lax",
