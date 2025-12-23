@@ -144,7 +144,7 @@ router.get("/tag/:tag", async (req, res) => {
 })
 
 //商品を追加するAPI
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
 	try {
 		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
 
