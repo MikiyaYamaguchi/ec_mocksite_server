@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const multer = require("multer")
+const fs = require("fs")
+const path = require("path")
 
 const ItemModel = require("../models/item")
 
@@ -168,12 +170,26 @@ const upload = multer({
 	}
  })
 
+//画像削除関数(トランザクション対応用)
+const deleteFileIfExists = (filename) => {
+	if(!filename) return
+	const filePath = path.join(__dirname, "../uploads/items", filename)
+	if(fs.existsSync(filePath)) {
+		fs.unlinkSync(filePath)
+	}
+}
+
 //商品を追加するAPI
 router.post("/", upload.fields([
 	{ name: 'img1', maxCount: 1 },
 	{ name: 'img2', maxCount: 1 },
 	{ name: 'img3', maxCount: 1 },
 ]), async (req, res) => {
+
+	const img1 = req.files?.img1?.[0]?.filename ?? null
+	const img2 = req.files?.img2?.[0]?.filename ?? null
+	const img3 = req.files?.img3?.[0]?.filename ?? null
+
 	try {
 		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
 
@@ -182,12 +198,17 @@ router.post("/", upload.fields([
 			...req.body,
 			price: Number(req.body.price),
 			stock: Number(req.body.stock),
-			img1: req.files?.img1?.[0]?.filename ?? null,
-			img2: req.files?.img2?.[0]?.filename ?? null,
-			img3: req.files?.img3?.[0]?.filename ?? null
+			img1,
+			img2,
+			img3
 	})
 		res.status(201).json(createdItem)
 	} catch(err) {
+
+		deleteFileIfExists(img1)
+		deleteFileIfExists(img2)
+		deleteFileIfExists(img3)
+
 		res.status(500).json({
 			message: "エラーが発生しました。",
 			error: err.message
