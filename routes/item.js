@@ -187,6 +187,17 @@ router.post("/", upload.fields([
 	}
 })
 
+//multerエラーハンドリング
+router.use((err, req, res, next) => {
+	if(err instanceof multer.MulterError) {
+		return res.status(400).json({
+			message: "ファイルアップロードエラー",
+			error: err.code
+		})
+	}
+	next(err)
+})
+
 //商品を更新するAPI
 router.put("/:id", authMiddleware, authorizeSelfForItem, async(req, res) => {
 	try {
