@@ -9,6 +9,8 @@ const connectDB = require("./db/pool")
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var itemRouter = require('./routes/item');
+var categoryRouter = require('./routes/category');
+var tagRouter = require('./routes/tag');
 var adminUserRouter = require('./routes/admin_user');
 
 var app = express();
@@ -37,6 +39,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/item', itemRouter);
+app.use('/category', categoryRouter);
+app.use('/tag', tagRouter);
 app.use('/admin_user', adminUserRouter);
 
 // catch 404 and forward to error handler
