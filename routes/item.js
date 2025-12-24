@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const multer = require("multer")
 
 const ItemModel = require("../models/item")
 
@@ -143,14 +144,34 @@ router.get("/tag/:tag", async (req, res) => {
 	}
 })
 
+//multer設定
+const storage = multer.diskStorage({
+	destination: 'uploads/items/',
+	filename: (req, file, cb) => {
+		const uniqueName = `${Date.now()}_${file.originalname}`
+		cb(null, uniqueName)
+	}
+})
+
+const upload = multer({ storage })
+
 //商品を追加するAPI
-router.post("/", async (req, res) => {
+router.post("/", upload.fields([
+	{ name: 'img1', maxCount: 1 },
+	{ name: 'img2', maxCount: 1 },
+	{ name: 'img3', maxCount: 1 },
+]), async (req, res) => {
 	try {
 		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
 
 		const createdItem = await ItemModel.create({
 			variations_prices: variations_prices,
-			...req.body
+			...req.body,
+			price: Number(req.body.price),
+			stock: Number(req.body.stock),
+			img1: req.files?.img1?.[0]?.filename ?? null,
+			img2: req.files?.img2?.[0]?.filename ?? null,
+			img3: req.files?.img3?.[0]?.filename ?? null
 	})
 		res.status(201).json(createdItem)
 	} catch(err) {
