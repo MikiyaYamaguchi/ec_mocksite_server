@@ -162,11 +162,11 @@ const upload = multer({
 	},
 	fileFilter: (req, file, cb) => {
 		const allowedTypes = ["image/jpeg", "image/png", "image/webp"]
-		if(!allowedTypes.includes(file.mimetype)) {
-			cb(new Error("対応していないファイル形式です。"))
-		} else {
+		if (!allowedTypes.includes(file.mimetype)) {
+				const error = new Error("INVALID_FILE_TYPE");
+				return cb(error);
+			}
 			cb(null, true)
-		}
 	}
  })
 
@@ -219,11 +219,20 @@ router.post("/", upload.fields([
 //multerエラーハンドリング
 router.use((err, req, res, next) => {
 	if(err instanceof multer.MulterError) {
+		if(err.code === "LIMIT_FILE_SIZE") {
+			return res.status(400).json({
+				errorCode: "FILE_SIZE_LIMIT",
+			})
+		}
 		return res.status(400).json({
-			message: "ファイルアップロードエラー",
-			error: err.code
-		})
+      errorCode: "UPLOAD_ERROR",
+    });
 	}
+	if (err.message === "INVALID_FILE_TYPE") {
+    return res.status(400).json({
+      errorCode: "INVALID_FILE_TYPE",
+    });
+  }
 	next(err)
 })
 
