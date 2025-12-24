@@ -32,3 +32,4 @@ yarn-error.log*
 
 # その他
 coverage/
+uploads/
