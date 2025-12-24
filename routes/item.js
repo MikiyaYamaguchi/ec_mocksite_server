@@ -191,7 +191,9 @@ router.post("/", upload.fields([
 	const img3 = req.files?.img3?.[0]?.filename ?? null
 
 	try {
-		const variations_prices = generateVariationsPrices(req.body.variations || [], req.body.price);
+		const variations = req.body.variations ? JSON.parse(req.body.variations) : []
+
+		const variations_prices = generateVariationsPrices(variations || [], req.body.price);
 
 		const createdItem = await ItemModel.create({
 			variations_prices: variations_prices,
@@ -200,7 +202,8 @@ router.post("/", upload.fields([
 			stock: Number(req.body.stock),
 			img1,
 			img2,
-			img3
+			img3,
+			variations: variations
 	})
 		res.status(201).json(createdItem)
 	} catch(err) {
